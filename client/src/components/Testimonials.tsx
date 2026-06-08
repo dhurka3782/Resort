@@ -35,15 +35,15 @@ const testimonials: Testimonial[] = [
 
 export default function Testimonials() {
   return (
-    <section id="testimonials" className="section bg-gradient-to-b from-sand to-sand-light">
+    <section id="testimonials" className="section bg-gradient-to-b from-sand to-sand-light dark:from-[#07111E] dark:to-[#0A1A2E]">
       <div className="container">
         {/* Section Header */}
         <div className="text-center mb-16 md:mb-20 animate-fadeInUp">
-          <p className="text-amber-700 text-xs md:text-sm font-semibold tracking-widest uppercase mb-3 md:mb-4">
+          <p className="text-amber-700 dark:text-amber-400 text-xs md:text-sm font-semibold tracking-widest uppercase mb-3 md:mb-4">
             Guest Stories
           </p>
-          <h2 className="text-slate-900 mb-4 md:mb-6 text-3xl md:text-5xl">Testimonials</h2>
-          <p className="text-slate-600 text-base md:text-lg max-w-2xl mx-auto">
+          <h2 className="text-slate-900 dark:text-[#F2EAD6] mb-4 md:mb-6 text-3xl md:text-5xl">Testimonials</h2>
+          <p className="text-slate-600 dark:text-[#8A9AB0] text-base md:text-lg max-w-2xl mx-auto">
             Hear from our distinguished guests about their unforgettable experiences
           </p>
         </div>
@@ -60,7 +60,7 @@ export default function Testimonials() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.2 }}
               viewport={{ once: true }}
-              className="bg-white rounded-lg p-8 shadow-lg hover-lift transition-all duration-300"
+              className="bg-white dark:bg-[#0D1F30] rounded-lg p-8 shadow-lg dark:shadow-black/40 hover-lift transition-all duration-300 border border-transparent dark:border-amber-900/20"
             >
               {/* Rating */}
               <div className="flex gap-1 mb-6">
@@ -70,14 +70,14 @@ export default function Testimonials() {
               </div>
 
               {/* Quote */}
-              <p className="text-slate-700 text-lg mb-6 italic leading-relaxed">
+              <p className="text-slate-700 dark:text-[#C8B89A] text-lg mb-6 italic leading-relaxed">
                 "{testimonial.quote}"
               </p>
 
               {/* Author */}
-              <div className="border-t border-amber-100 pt-6">
-                <p className="font-semibold text-slate-900">{testimonial.name}</p>
-                <p className="text-amber-700 text-sm">{testimonial.title}</p>
+              <div className="border-t border-amber-100 dark:border-amber-800/30 pt-6">
+                <p className="font-semibold text-slate-900 dark:text-[#F2EAD6]">{testimonial.name}</p>
+                <p className="text-amber-700 dark:text-amber-400 text-sm">{testimonial.title}</p>
               </div>
             </motion.div>
           ))}

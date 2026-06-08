@@ -190,8 +190,6 @@ Teal:       #2AA8C0 (accent secondary)
 ### Hosting Options
 - **Vercel** — Recommended for Next.js-style deployments
 - **Netlify** — Excellent static site hosting
-- **AWS S3 + CloudFront** — Enterprise-grade CDN
-- **Manus Platform** — Built-in hosting with custom domains
 
 ### Build & Deploy
 ```bash

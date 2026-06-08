@@ -31,15 +31,15 @@ const experiences: Experience[] = [
 
 export default function Experiences() {
   return (
-    <section id="experiences" className="section bg-white">
+    <section id="experiences" className="section bg-white dark:bg-[#07111E]">
       <div className="container">
         {/* Section Header */}
         <div className="text-center mb-16 md:mb-20 animate-fadeInUp">
-          <p className="text-amber-700 text-xs md:text-sm font-semibold tracking-widest uppercase mb-3 md:mb-4">
+          <p className="text-amber-700 dark:text-amber-400 text-xs md:text-sm font-semibold tracking-widest uppercase mb-3 md:mb-4">
             Unforgettable Moments
           </p>
-          <h2 className="text-slate-900 mb-4 md:mb-6 text-3xl md:text-5xl">Curated Experiences</h2>
-          <p className="text-slate-600 text-base md:text-lg max-w-2xl mx-auto">
+          <h2 className="text-slate-900 dark:text-[#F2EAD6] mb-4 md:mb-6 text-3xl md:text-5xl">Curated Experiences</h2>
+          <p className="text-slate-600 dark:text-[#8A9AB0] text-base md:text-lg max-w-2xl mx-auto">
             Immerse yourself in authentic luxury with our carefully curated selection of activities and services
           </p>
         </div>
@@ -56,25 +56,25 @@ export default function Experiences() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.2 }}
               viewport={{ once: true }}
-              className="text-center"
+              className="text-center group"
             >
               {/* Icon */}
               <div className="flex justify-center mb-6">
-                <div className="w-16 h-16 bg-amber-50 rounded-lg flex items-center justify-center text-amber-700 hover-lift transition-transform duration-300">
+                <div className="w-16 h-16 bg-amber-50 dark:bg-amber-900/25 rounded-lg flex items-center justify-center text-amber-700 dark:text-amber-400 hover-lift transition-all duration-300 border border-amber-100 dark:border-amber-800/30 group-hover:bg-amber-100 dark:group-hover:bg-amber-900/40">
                   {exp.icon}
                 </div>
               </div>
 
               {/* Content */}
-              <h3 className="text-slate-900 mb-4 text-2xl">{exp.title}</h3>
-              <p className="text-slate-600 leading-relaxed">{exp.description}</p>
+              <h3 className="text-slate-900 dark:text-[#F2EAD6] mb-4 text-2xl">{exp.title}</h3>
+              <p className="text-slate-600 dark:text-[#8A9AB0] leading-relaxed">{exp.description}</p>
             </motion.div>
           ))}
         </div>
 
         {/* Bottom CTA */}
         <div className="mt-16 text-center">
-          <button className="px-8 py-3 bg-amber-700 hover:bg-amber-800 text-white font-semibold rounded-sm transition-all duration-300 hover:scale-105">
+          <button className="px-8 py-3 bg-amber-700 dark:bg-amber-600 hover:bg-amber-800 dark:hover:bg-amber-500 text-white font-semibold rounded-sm transition-all duration-300 hover:scale-105">
             Explore All Experiences
           </button>
         </div>

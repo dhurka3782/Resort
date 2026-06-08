@@ -18,8 +18,8 @@ const villas: VillaAvailability[] = [
 ];
 
 const peakSeasons = [
-  { start: '2026-12-20', end: '2027-01-05' }, // New Year
-  { start: '2026-07-01', end: '2026-08-31' }, // Summer
+  { start: '2026-12-20', end: '2027-01-05' },
+  { start: '2026-07-01', end: '2026-08-31' },
 ];
 
 const isPeakSeason = (date: Date): boolean => {
@@ -43,9 +43,7 @@ export default function AvailabilityCalendar() {
     const start = new Date(checkIn);
     const end = new Date(checkOut);
     const nights = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
-
     if (nights <= 0) return 0;
-
     let total = 0;
     for (let i = 0; i < nights; i++) {
       const date = new Date(start);
@@ -55,20 +53,24 @@ export default function AvailabilityCalendar() {
     return total;
   };
 
-  const nights = checkIn && checkOut
-    ? Math.ceil((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24))
-    : 0;
+  const nights =
+    checkIn && checkOut
+      ? Math.ceil((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24))
+      : 0;
+
+  const inputClass =
+    'w-full px-4 py-3 bg-white dark:bg-[#0D1F30] border border-amber-200 dark:border-amber-800/40 rounded-lg text-slate-900 dark:text-[#F2EAD6] focus:outline-none focus:ring-2 focus:ring-amber-400 dark:focus:ring-amber-600 transition-all';
 
   return (
-    <section className="section bg-white">
+    <section className="section bg-white dark:bg-[#07111E]">
       <div className="container">
         {/* Section Header */}
         <div className="text-center mb-16 md:mb-20 animate-fadeInUp">
-          <p className="text-amber-700 text-xs md:text-sm font-semibold tracking-widest uppercase mb-3 md:mb-4">
+          <p className="text-amber-700 dark:text-amber-400 text-xs md:text-sm font-semibold tracking-widest uppercase mb-3 md:mb-4">
             Plan Your Stay
           </p>
-          <h2 className="text-slate-900 mb-4 md:mb-6 text-3xl md:text-5xl">Availability & Pricing</h2>
-          <p className="text-slate-600 text-base md:text-lg max-w-2xl mx-auto">
+          <h2 className="text-slate-900 dark:text-[#F2EAD6] mb-4 md:mb-6 text-3xl md:text-5xl">Availability & Pricing</h2>
+          <p className="text-slate-600 dark:text-[#8A9AB0] text-base md:text-lg max-w-2xl mx-auto">
             Check real-time availability and dynamic pricing for our villas
           </p>
         </div>
@@ -76,7 +78,6 @@ export default function AvailabilityCalendar() {
         {/* Divider */}
         <div className="section-divider mb-16" />
 
-        {/* Calendar & Pricing */}
         <div className="grid md:grid-cols-2 gap-12 lg:gap-16">
           {/* Left: Villa Selection & Calendar */}
           <motion.div
@@ -87,7 +88,7 @@ export default function AvailabilityCalendar() {
           >
             {/* Villa Selector */}
             <div className="mb-8">
-              <label className="block text-slate-900 font-semibold mb-4">Select Villa</label>
+              <label className="block text-slate-900 dark:text-[#F2EAD6] font-semibold mb-4">Select Villa</label>
               <div className="space-y-3">
                 {villas.map((v) => (
                   <button
@@ -95,12 +96,12 @@ export default function AvailabilityCalendar() {
                     onClick={() => setSelectedVilla(v.id)}
                     className={`w-full p-4 rounded-lg border-2 transition-all text-left ${
                       selectedVilla === v.id
-                        ? 'border-amber-700 bg-amber-50'
-                        : 'border-amber-100 hover:border-amber-300'
+                        ? 'border-amber-700 dark:border-amber-500 bg-amber-50 dark:bg-amber-900/25'
+                        : 'border-amber-100 dark:border-amber-800/30 hover:border-amber-300 dark:hover:border-amber-700/50 dark:bg-[#0D1F30]/50'
                     }`}
                   >
-                    <p className="font-semibold text-slate-900">{v.name}</p>
-                    <p className="text-sm text-slate-600">
+                    <p className="font-semibold text-slate-900 dark:text-[#F2EAD6]">{v.name}</p>
+                    <p className="text-sm text-slate-600 dark:text-[#8A9AB0]">
                       {v.available} available • From ${v.basePrice}/night
                     </p>
                   </button>
@@ -111,7 +112,7 @@ export default function AvailabilityCalendar() {
             {/* Date Selection */}
             <div className="space-y-4">
               <div>
-                <label className="block text-slate-900 font-semibold mb-2">
+                <label className="block text-slate-900 dark:text-[#F2EAD6] font-semibold mb-2">
                   <Calendar className="w-4 h-4 inline mr-2" />
                   Check-in Date
                 </label>
@@ -119,12 +120,11 @@ export default function AvailabilityCalendar() {
                   type="date"
                   value={checkIn}
                   onChange={(e) => setCheckIn(e.target.value)}
-                  className="w-full px-4 py-3 bg-white border border-amber-200 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                  className={inputClass}
                 />
               </div>
-
               <div>
-                <label className="block text-slate-900 font-semibold mb-2">
+                <label className="block text-slate-900 dark:text-[#F2EAD6] font-semibold mb-2">
                   <Calendar className="w-4 h-4 inline mr-2" />
                   Check-out Date
                 </label>
@@ -133,73 +133,67 @@ export default function AvailabilityCalendar() {
                   value={checkOut}
                   onChange={(e) => setCheckOut(e.target.value)}
                   min={checkIn}
-                  className="w-full px-4 py-3 bg-white border border-amber-200 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                  className={inputClass}
                 />
               </div>
             </div>
 
             {/* Pricing Info */}
-            <div className="mt-8 p-6 bg-amber-50 rounded-lg border border-amber-200">
-              <p className="text-sm text-slate-600 mb-2">Peak Season Pricing:</p>
-              <p className="text-xs text-slate-500 mb-4">
-                Dec 20 - Jan 5, Jul 1 - Aug 31
-              </p>
+            <div className="mt-8 p-6 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800/30">
+              <p className="text-sm text-slate-600 dark:text-[#8A9AB0] mb-2">Peak Season Pricing:</p>
+              <p className="text-xs text-slate-500 dark:text-[#6A7A8A] mb-4">Dec 20 - Jan 5, Jul 1 - Aug 31</p>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-xs text-slate-600">Regular</p>
-                  <p className="text-lg font-bold text-slate-900">${villa.basePrice}</p>
+                  <p className="text-xs text-slate-600 dark:text-[#8A9AB0]">Regular</p>
+                  <p className="text-lg font-bold text-slate-900 dark:text-[#F2EAD6]">${villa.basePrice}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-slate-600">Peak</p>
-                  <p className="text-lg font-bold text-amber-700">${villa.peakPrice}</p>
+                  <p className="text-xs text-slate-600 dark:text-[#8A9AB0]">Peak</p>
+                  <p className="text-lg font-bold text-amber-700 dark:text-amber-400">${villa.peakPrice}</p>
                 </div>
               </div>
             </div>
           </motion.div>
 
-          {/* Right: Pricing Summary */}
+          {/* Right: Booking Summary */}
           <motion.div
             variants={modalContent}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="glass backdrop-blur-xl bg-white/20 border border-white/30 rounded-2xl p-8 md:p-10 h-fit"
+            className="backdrop-blur-xl bg-white/20 dark:bg-[#0D1F30]/60 border border-white/30 dark:border-amber-800/25 rounded-2xl p-8 md:p-10 h-fit shadow-xl dark:shadow-black/40"
           >
-            <h3 className="text-2xl font-bold text-slate-900 mb-6">Booking Summary</h3>
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-[#F2EAD6] mb-6">Booking Summary</h3>
 
             <div className="space-y-4 mb-8">
-              <div className="flex justify-between items-center pb-4 border-b border-amber-200">
-                <span className="text-slate-700">Villa</span>
-                <span className="font-semibold text-slate-900">{villa.name}</span>
+              <div className="flex justify-between items-center pb-4 border-b border-amber-200 dark:border-amber-800/30">
+                <span className="text-slate-700 dark:text-[#C8B89A]">Villa</span>
+                <span className="font-semibold text-slate-900 dark:text-[#F2EAD6]">{villa.name}</span>
               </div>
 
               {checkIn && checkOut && (
                 <>
-                  <div className="flex justify-between items-center pb-4 border-b border-amber-200">
-                    <span className="text-slate-700">Check-in</span>
-                    <span className="font-semibold text-slate-900">{checkIn}</span>
+                  <div className="flex justify-between items-center pb-4 border-b border-amber-200 dark:border-amber-800/30">
+                    <span className="text-slate-700 dark:text-[#C8B89A]">Check-in</span>
+                    <span className="font-semibold text-slate-900 dark:text-[#F2EAD6]">{checkIn}</span>
                   </div>
-
-                  <div className="flex justify-between items-center pb-4 border-b border-amber-200">
-                    <span className="text-slate-700">Check-out</span>
-                    <span className="font-semibold text-slate-900">{checkOut}</span>
+                  <div className="flex justify-between items-center pb-4 border-b border-amber-200 dark:border-amber-800/30">
+                    <span className="text-slate-700 dark:text-[#C8B89A]">Check-out</span>
+                    <span className="font-semibold text-slate-900 dark:text-[#F2EAD6]">{checkOut}</span>
                   </div>
-
-                  <div className="flex justify-between items-center pb-4 border-b border-amber-200">
-                    <span className="text-slate-700">Number of Nights</span>
-                    <span className="font-semibold text-slate-900">{nights}</span>
+                  <div className="flex justify-between items-center pb-4 border-b border-amber-200 dark:border-amber-800/30">
+                    <span className="text-slate-700 dark:text-[#C8B89A]">Number of Nights</span>
+                    <span className="font-semibold text-slate-900 dark:text-[#F2EAD6]">{nights}</span>
                   </div>
-
-                  <div className="flex justify-between items-center pb-4 border-b border-amber-200">
-                    <span className="text-slate-700">Average Price/Night</span>
-                    <span className="font-semibold text-slate-900">
+                  <div className="flex justify-between items-center pb-4 border-b border-amber-200 dark:border-amber-800/30">
+                    <span className="text-slate-700 dark:text-[#C8B89A]">Average Price/Night</span>
+                    <span className="font-semibold text-slate-900 dark:text-[#F2EAD6]">
                       ${Math.round(calculateTotalPrice() / nights)}
                     </span>
                   </div>
-
-                  <div className="flex justify-between items-center pt-4 bg-amber-50 px-4 py-3 rounded-lg">
-                    <span className="font-bold text-slate-900">Total Price</span>
-                    <span className="text-2xl font-bold text-amber-700">
+                  <div className="flex justify-between items-center pt-4 bg-amber-50 dark:bg-amber-900/25 px-4 py-3 rounded-lg border border-amber-100 dark:border-amber-800/30">
+                    <span className="font-bold text-slate-900 dark:text-[#F2EAD6]">Total Price</span>
+                    <span className="text-2xl font-bold text-amber-700 dark:text-amber-400">
                       ${calculateTotalPrice().toLocaleString()}
                     </span>
                   </div>
@@ -207,14 +201,16 @@ export default function AvailabilityCalendar() {
               )}
 
               {(!checkIn || !checkOut) && (
-                <p className="text-center text-slate-600 py-8">
+                <p className="text-center text-slate-600 dark:text-[#8A9AB0] py-8">
                   Select dates to see pricing
                 </p>
               )}
             </div>
 
-            <button className="w-full py-3 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white font-bold rounded-lg transition-all duration-300 hover:scale-105 disabled:opacity-50"
-              disabled={!checkIn || !checkOut}>
+            <button
+              className="w-full py-3 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white font-bold rounded-lg transition-all duration-300 hover:scale-105 disabled:opacity-50"
+              disabled={!checkIn || !checkOut}
+            >
               Proceed to Booking
             </button>
           </motion.div>

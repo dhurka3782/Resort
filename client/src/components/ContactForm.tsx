@@ -57,14 +57,13 @@ export default function ContactForm() {
     setIsSubmitting(true);
 
     try {
-      // Send email via Web3Forms (free tier, no API key required)
       const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          access_key: 'PUBLIC_KEY_DEMO', // Demo key - replace with actual
+          access_key: 'PUBLIC_KEY_DEMO',
           name: formData.name,
           email: formData.email,
           phone: formData.phone,
@@ -79,44 +78,25 @@ export default function ContactForm() {
 
       if (response.ok) {
         toast.success('Inquiry sent successfully! We will contact you shortly.');
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          checkIn: '',
-          checkOut: '',
-          message: '',
-        });
       } else {
-        // Fallback: simulate successful submission for demo
         toast.success('Inquiry received! We will contact you within 24 hours.');
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          checkIn: '',
-          checkOut: '',
-          message: '',
-        });
       }
-    } catch (error) {
-      // Fallback for demo purposes
+      setFormData({ name: '', email: '', phone: '', checkIn: '', checkOut: '', message: '' });
+    } catch {
       toast.success('Inquiry received! We will contact you within 24 hours.');
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        checkIn: '',
-        checkOut: '',
-        message: '',
-      });
+      setFormData({ name: '', email: '', phone: '', checkIn: '', checkOut: '', message: '' });
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const inputClass =
+    'w-full px-4 py-3 bg-white/80 dark:bg-[#0D1F30] border border-amber-100 dark:border-amber-800/40 rounded-lg text-slate-900 dark:text-[#F2EAD6] placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400 dark:focus:ring-amber-600 focus:bg-white dark:focus:bg-[#112233] transition-all';
+
+  const labelClass = 'block text-slate-900 dark:text-[#F2EAD6] text-sm font-semibold mb-2';
+
   return (
-    <section id="contact" className="section bg-gradient-to-b from-sand to-sand-light py-20 md:py-32">
+    <section id="contact" className="section bg-gradient-to-b from-sand to-sand-light dark:from-[#07111E] dark:to-[#0A1A2E] py-20 md:py-32">
       <div className="container">
         <div className="grid md:grid-cols-2 gap-12 lg:gap-16">
           {/* Contact Info */}
@@ -127,46 +107,32 @@ export default function ContactForm() {
             viewport={{ once: true }}
           >
             <div className="mb-12">
-              <p className="text-amber-700 text-xs md:text-sm font-semibold tracking-widest uppercase mb-3 md:mb-4">
+              <p className="text-amber-700 dark:text-amber-400 text-xs md:text-sm font-semibold tracking-widest uppercase mb-3 md:mb-4">
                 Get In Touch
               </p>
-              <h2 className="text-slate-900 mb-4 md:mb-6 text-3xl md:text-5xl">Contact Us</h2>
-              <p className="text-slate-600 text-base md:text-lg leading-relaxed">
+              <h2 className="text-slate-900 dark:text-[#F2EAD6] mb-4 md:mb-6 text-3xl md:text-5xl">Contact Us</h2>
+              <p className="text-slate-600 dark:text-[#8A9AB0] text-base md:text-lg leading-relaxed">
                 Have questions about our villas or experiences? Our concierge team is ready to help you plan the perfect getaway.
               </p>
             </div>
 
             {/* Contact Details */}
             <div className="space-y-6">
-              <div className="flex gap-4">
-                <div className="w-12 h-12 bg-amber-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Phone className="w-6 h-6 text-amber-700" />
+              {[
+                { icon: Phone, label: 'Phone', value: '+960 123 4567' },
+                { icon: Mail, label: 'Email', value: 'hello@velaresort.com' },
+                { icon: MapPin, label: 'Location', value: 'North Malé Atoll, Maldives' },
+              ].map(({ icon: Icon, label, value }) => (
+                <div key={label} className="flex gap-4">
+                  <div className="w-12 h-12 bg-amber-50 dark:bg-amber-900/25 rounded-lg flex items-center justify-center flex-shrink-0 border border-amber-100 dark:border-amber-800/30">
+                    <Icon className="w-6 h-6 text-amber-700 dark:text-amber-400" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-slate-900 dark:text-[#F2EAD6]">{label}</p>
+                    <p className="text-slate-600 dark:text-[#8A9AB0]">{value}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-semibold text-slate-900">Phone</p>
-                  <p className="text-slate-600">+960 123 4567</p>
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <div className="w-12 h-12 bg-amber-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Mail className="w-6 h-6 text-amber-700" />
-                </div>
-                <div>
-                  <p className="font-semibold text-slate-900">Email</p>
-                  <p className="text-slate-600">hello@velaresort.com</p>
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <div className="w-12 h-12 bg-amber-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <MapPin className="w-6 h-6 text-amber-700" />
-                </div>
-                <div>
-                  <p className="font-semibold text-slate-900">Location</p>
-                  <p className="text-slate-600">North Malé Atoll, Maldives</p>
-                </div>
-              </div>
+              ))}
             </div>
           </motion.div>
 
@@ -176,98 +142,80 @@ export default function ContactForm() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="glass backdrop-blur-xl bg-white/20 border border-white/30 rounded-2xl p-8 md:p-10"
+            className="backdrop-blur-xl bg-white/20 dark:bg-[#0D1F30]/60 border border-white/30 dark:border-amber-800/25 rounded-2xl p-8 md:p-10 shadow-xl dark:shadow-black/40"
           >
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Name */}
               <div>
-                <label className="block text-slate-900 text-sm font-semibold mb-2">
-                  Full Name
-                </label>
+                <label className={labelClass}>Full Name</label>
                 <input
                   type="text"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="Your name"
-                  className="w-full px-4 py-3 bg-white/80 border border-amber-100 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:bg-white transition-all"
+                  className={inputClass}
                 />
               </div>
 
-              {/* Email */}
               <div>
-                <label className="block text-slate-900 text-sm font-semibold mb-2">
-                  Email Address
-                </label>
+                <label className={labelClass}>Email Address</label>
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="your@email.com"
-                  className="w-full px-4 py-3 bg-white/80 border border-amber-100 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:bg-white transition-all"
+                  className={inputClass}
                 />
               </div>
 
-              {/* Phone */}
               <div>
-                <label className="block text-slate-900 text-sm font-semibold mb-2">
-                  Phone Number
-                </label>
+                <label className={labelClass}>Phone Number</label>
                 <input
                   type="tel"
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
                   placeholder="+1 (555) 000-0000"
-                  className="w-full px-4 py-3 bg-white/80 border border-amber-100 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:bg-white transition-all"
+                  className={inputClass}
                 />
               </div>
 
-              {/* Dates */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-slate-900 text-sm font-semibold mb-2">
-                    Check-in
-                  </label>
+                  <label className={labelClass}>Check-in</label>
                   <input
                     type="date"
                     name="checkIn"
                     value={formData.checkIn}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-white/80 border border-amber-100 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:bg-white transition-all"
+                    className={inputClass}
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-900 text-sm font-semibold mb-2">
-                    Check-out
-                  </label>
+                  <label className={labelClass}>Check-out</label>
                   <input
                     type="date"
                     name="checkOut"
                     value={formData.checkOut}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-white/80 border border-amber-100 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:bg-white transition-all"
+                    className={inputClass}
                   />
                 </div>
               </div>
 
-              {/* Message */}
               <div>
-                <label className="block text-slate-900 text-sm font-semibold mb-2">
-                  Message
-                </label>
+                <label className={labelClass}>Message</label>
                 <textarea
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
                   placeholder="Tell us about your preferences..."
                   rows={4}
-                  className="w-full px-4 py-3 bg-white/80 border border-amber-100 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:bg-white transition-all resize-none"
+                  className={`${inputClass} resize-none`}
                 />
               </div>
 
-              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={isSubmitting}
@@ -276,7 +224,7 @@ export default function ContactForm() {
                 {isSubmitting ? 'Sending...' : 'Send Inquiry'}
               </button>
 
-              <p className="text-xs text-slate-600 text-center">
+              <p className="text-xs text-slate-600 dark:text-[#8A9AB0] text-center">
                 We typically respond within 24 hours during business days.
               </p>
             </form>

@@ -41,15 +41,15 @@ export default function Gallery() {
   };
 
   return (
-    <section id="gallery" className="section bg-white">
+    <section id="gallery" className="section bg-white dark:bg-[#07111E]">
       <div className="container">
         {/* Section Header */}
         <div className="text-center mb-16 md:mb-20 animate-fadeInUp">
-          <p className="text-amber-700 text-xs md:text-sm font-semibold tracking-widest uppercase mb-3 md:mb-4">
+          <p className="text-amber-700 dark:text-amber-400 text-xs md:text-sm font-semibold tracking-widest uppercase mb-3 md:mb-4">
             Visual Journey
           </p>
-          <h2 className="text-slate-900 mb-4 md:mb-6 text-3xl md:text-5xl">Gallery</h2>
-          <p className="text-slate-600 text-base md:text-lg max-w-2xl mx-auto">
+          <h2 className="text-slate-900 dark:text-[#F2EAD6] mb-4 md:mb-6 text-3xl md:text-5xl">Gallery</h2>
+          <p className="text-slate-600 dark:text-[#8A9AB0] text-base md:text-lg max-w-2xl mx-auto">
             Discover the breathtaking beauty of Vela Resort through our curated collection of moments
           </p>
         </div>
@@ -66,19 +66,16 @@ export default function Gallery() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="group relative h-64 md:h-72 overflow-hidden rounded-lg shadow-lg cursor-pointer"
+              className="group relative h-64 md:h-72 overflow-hidden rounded-lg shadow-lg dark:shadow-black/50 cursor-pointer ring-1 ring-transparent dark:ring-amber-900/20 dark:hover:ring-amber-700/40 transition-all duration-300"
               onClick={() => handleImageClick(index)}
             >
-              {/* Image */}
               <img
                 src={img.image}
                 alt={img.title}
                 loading="lazy"
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               />
-
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
                 <p className="text-white font-semibold text-lg p-6">{img.title}</p>
               </div>
             </motion.div>
@@ -86,7 +83,6 @@ export default function Gallery() {
         </div>
       </div>
 
-      {/* Lightbox */}
       <ImageLightbox
         images={galleryImages.map((img) => ({
           id: img.id,
