@@ -339,3 +339,22 @@
     text-wrap: balance;
   }
 }
+
+@keyframes shine {
+  0% {
+    background-position: 100%;
+  }
+  100% {
+    background-position: -100%;
+  }
+}
+
+.shiny-text {
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  /* Adjust '3s' to change the speed of the shimmer */
+  animation: shine 3s linear infinite; 
+}
