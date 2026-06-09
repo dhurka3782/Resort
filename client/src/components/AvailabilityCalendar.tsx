@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar } from 'lucide-react';
+import { format, isBefore, addDays, startOfDay } from 'date-fns';
 import { modalContent } from '@/lib/animations';
+import { DatePicker } from '@/components/ui/date-picker';
 
 interface VillaAvailability {
   id: number;
@@ -29,8 +31,8 @@ const isPeakSeason = (date: Date): boolean => {
 
 export default function AvailabilityCalendar() {
   const [selectedVilla, setSelectedVilla] = useState(villas[0].id);
-  const [checkIn, setCheckIn] = useState('');
-  const [checkOut, setCheckOut] = useState('');
+  const [checkIn, setCheckIn] = useState<Date | undefined>();
+  const [checkOut, setCheckOut] = useState<Date | undefined>();
 
   const villa = villas.find((v) => v.id === selectedVilla)!;
 
@@ -40,8 +42,8 @@ export default function AvailabilityCalendar() {
 
   const calculateTotalPrice = () => {
     if (!checkIn || !checkOut) return 0;
-    const start = new Date(checkIn);
-    const end = new Date(checkOut);
+    const start = checkIn;
+    const end = checkOut;
     const nights = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
     if (nights <= 0) return 0;
     let total = 0;
@@ -55,11 +57,24 @@ export default function AvailabilityCalendar() {
 
   const nights =
     checkIn && checkOut
-      ? Math.ceil((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24))
+      ? Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24))
       : 0;
 
-  const inputClass =
-    'w-full px-4 py-3 bg-white dark:bg-[#0D1F30] border border-amber-200 dark:border-amber-800/40 rounded-lg text-slate-900 dark:text-[#F2EAD6] focus:outline-none focus:ring-2 focus:ring-amber-400 dark:focus:ring-amber-600 transition-all';
+  const handleCheckInChange = (date: Date | undefined) => {
+    if (date && checkOut && isBefore(checkOut, date)) {
+      setCheckOut(undefined);
+    }
+    setCheckIn(date);
+  };
+
+  const checkInDisabled = (date: Date) => {
+    return isBefore(date, startOfDay(new Date()));
+  };
+
+  const checkOutDisabled = (date: Date) => {
+    if (!checkIn) return isBefore(date, startOfDay(new Date()));
+    return isBefore(date, addDays(checkIn, 1)) || isBefore(date, startOfDay(new Date()));
+  };
 
   return (
     <section className="section bg-white dark:bg-[#07111E]">
@@ -116,11 +131,12 @@ export default function AvailabilityCalendar() {
                   <Calendar className="w-4 h-4 inline mr-2" />
                   Check-in Date
                 </label>
-                <input
-                  type="date"
-                  value={checkIn}
-                  onChange={(e) => setCheckIn(e.target.value)}
-                  className={inputClass}
+                <DatePicker
+                  date={checkIn}
+                  onDateChange={handleCheckInChange}
+                  placeholder="Select check-in date"
+                  disabledDates={checkInDisabled}
+                  fromDate={new Date()}
                 />
               </div>
               <div>
@@ -128,12 +144,12 @@ export default function AvailabilityCalendar() {
                   <Calendar className="w-4 h-4 inline mr-2" />
                   Check-out Date
                 </label>
-                <input
-                  type="date"
-                  value={checkOut}
-                  onChange={(e) => setCheckOut(e.target.value)}
-                  min={checkIn}
-                  className={inputClass}
+                <DatePicker
+                  date={checkOut}
+                  onDateChange={setCheckOut}
+                  placeholder="Select check-out date"
+                  disabledDates={checkOutDisabled}
+                  fromDate={checkIn ? addDays(checkIn, 1) : addDays(new Date(), 1)}
                 />
               </div>
             </div>
@@ -175,11 +191,11 @@ export default function AvailabilityCalendar() {
                 <>
                   <div className="flex justify-between items-center pb-4 border-b border-amber-200 dark:border-amber-800/30">
                     <span className="text-slate-700 dark:text-[#C8B89A]">Check-in</span>
-                    <span className="font-semibold text-slate-900 dark:text-[#F2EAD6]">{checkIn}</span>
+                    <span className="font-semibold text-slate-900 dark:text-[#F2EAD6]">{format(checkIn, 'MMM dd, yyyy')}</span>
                   </div>
                   <div className="flex justify-between items-center pb-4 border-b border-amber-200 dark:border-amber-800/30">
                     <span className="text-slate-700 dark:text-[#C8B89A]">Check-out</span>
-                    <span className="font-semibold text-slate-900 dark:text-[#F2EAD6]">{checkOut}</span>
+                    <span className="font-semibold text-slate-900 dark:text-[#F2EAD6]">{format(checkOut, 'MMM dd, yyyy')}</span>
                   </div>
                   <div className="flex justify-between items-center pb-4 border-b border-amber-200 dark:border-amber-800/30">
                     <span className="text-slate-700 dark:text-[#C8B89A]">Number of Nights</span>

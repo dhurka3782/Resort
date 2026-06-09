@@ -1,10 +1,17 @@
 import { useState } from 'react';
-import { Calendar, Users } from 'lucide-react';
+import { Users } from 'lucide-react';
+import DateRangePicker from './DateRangePicker';
 
 export default function BookingWidget() {
-  const [checkIn, setCheckIn] = useState('');
-  const [checkOut, setCheckOut] = useState('');
+  const [checkIn, setCheckIn] = useState<Date | undefined>();
+  const [checkOut, setCheckOut] = useState<Date | undefined>();
   const [guests, setGuests] = useState('2');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // In a real app this would trigger availability checks
+    console.log({ checkIn, checkOut, guests });
+  };
 
   return (
     <section className="relative py-20 md:py-32 overflow-hidden">
@@ -20,7 +27,7 @@ export default function BookingWidget() {
 
       {/* Content */}
       <div className="container relative z-10">
-        <div className="max-w-2xl mx-auto">
+        <div className="max-w-3xl mx-auto">
           {/* Glassmorphism Card */}
           <div className="glass backdrop-blur-xl bg-white/20 border border-white/30 rounded-2xl p-8 md:p-12 shadow-2xl">
             {/* Header */}
@@ -30,33 +37,15 @@ export default function BookingWidget() {
             </div>
 
             {/* Form */}
-            <form className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-                {/* Check-in Date */}
-                <div>
-                  <label className="block text-white/90 text-sm font-semibold mb-3">
-                    <Calendar className="w-4 h-4 inline mr-2" />
-                    Check-in
-                  </label>
-                  <input
-                    type="date"
-                    value={checkIn}
-                    onChange={(e) => setCheckIn(e.target.value)}
-                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:bg-white/30 transition-all text-sm md:text-base"
-                  />
-                </div>
-
-                {/* Check-out Date */}
-                <div>
-                  <label className="block text-white/90 text-sm font-semibold mb-3">
-                    <Calendar className="w-4 h-4 inline mr-2" />
-                    Check-out
-                  </label>
-                  <input
-                    type="date"
-                    value={checkOut}
-                    onChange={(e) => setCheckOut(e.target.value)}
-                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:bg-white/30 transition-all text-sm md:text-base"
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 items-end">
+                {/* Check-in & Check-out Date Range Picker */}
+                <div className="md:col-span-2">
+                  <DateRangePicker
+                    checkIn={checkIn}
+                    checkOut={checkOut}
+                    onCheckInChange={setCheckIn}
+                    onCheckOutChange={setCheckOut}
                   />
                 </div>
 
@@ -69,7 +58,7 @@ export default function BookingWidget() {
                   <select
                     value={guests}
                     onChange={(e) => setGuests(e.target.value)}
-                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/20 border border-white/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-amber-400 focus:bg-white/30 transition-all text-sm md:text-base"
+                    className="w-full px-3 md:px-4 py-2 md:py-3.5 bg-white/20 border border-white/30 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-amber-400 focus:bg-white/30 transition-all text-sm md:text-base h-12"
                   >
                     {[1, 2, 3, 4, 5, 6].map((num) => (
                       <option key={num} value={num} className="bg-slate-900">

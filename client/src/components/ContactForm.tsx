@@ -2,14 +2,16 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin } from 'lucide-react';
 import { toast } from 'sonner';
+import { format, isBefore, addDays, startOfDay } from 'date-fns';
 import { modalContent } from '@/lib/animations';
+import { DatePicker } from '@/components/ui/date-picker';
 
 interface FormData {
   name: string;
   email: string;
   phone: string;
-  checkIn: string;
-  checkOut: string;
+  checkIn: Date | undefined;
+  checkOut: Date | undefined;
   message: string;
 }
 
@@ -18,8 +20,8 @@ export default function ContactForm() {
     name: '',
     email: '',
     phone: '',
-    checkIn: '',
-    checkOut: '',
+    checkIn: undefined,
+    checkOut: undefined,
     message: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -27,6 +29,21 @@ export default function ContactForm() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleCheckInChange = (date: Date | undefined) => {
+    setFormData((prev) => {
+      const nextCheckOut = prev.checkOut && date && isBefore(prev.checkOut, date) ? undefined : prev.checkOut;
+      return {
+        ...prev,
+        checkIn: date,
+        checkOut: nextCheckOut,
+      };
+    });
+  };
+
+  const handleCheckOutChange = (date: Date | undefined) => {
+    setFormData((prev) => ({ ...prev, checkOut: date }));
   };
 
   const validateForm = () => {
@@ -67,8 +84,8 @@ export default function ContactForm() {
           name: formData.name,
           email: formData.email,
           phone: formData.phone,
-          checkIn: formData.checkIn,
-          checkOut: formData.checkOut,
+          checkIn: formData.checkIn ? format(formData.checkIn, 'yyyy-MM-dd') : '',
+          checkOut: formData.checkOut ? format(formData.checkOut, 'yyyy-MM-dd') : '',
           message: formData.message,
           subject: `New Inquiry from ${formData.name} - Vela Resort`,
           from_name: 'Vela Resort Inquiry',
@@ -81,19 +98,25 @@ export default function ContactForm() {
       } else {
         toast.success('Inquiry received! We will contact you within 24 hours.');
       }
-      setFormData({ name: '', email: '', phone: '', checkIn: '', checkOut: '', message: '' });
+      setFormData({ name: '', email: '', phone: '', checkIn: undefined, checkOut: undefined, message: '' });
     } catch {
       toast.success('Inquiry received! We will contact you within 24 hours.');
-      setFormData({ name: '', email: '', phone: '', checkIn: '', checkOut: '', message: '' });
+      setFormData({ name: '', email: '', phone: '', checkIn: undefined, checkOut: undefined, message: '' });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const inputClass =
-    'w-full px-4 py-3 bg-white/80 dark:bg-[#0D1F30] border border-amber-100 dark:border-amber-800/40 rounded-lg text-slate-900 dark:text-[#F2EAD6] placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400 dark:focus:ring-amber-600 focus:bg-white dark:focus:bg-[#112233] transition-all';
-
   const labelClass = 'block text-slate-900 dark:text-[#F2EAD6] text-sm font-semibold mb-2';
+
+  const checkInDisabled = (date: Date) => {
+    return isBefore(date, startOfDay(new Date()));
+  };
+
+  const checkOutDisabled = (date: Date) => {
+    if (!formData.checkIn) return isBefore(date, startOfDay(new Date()));
+    return isBefore(date, addDays(formData.checkIn, 1)) || isBefore(date, startOfDay(new Date()));
+  };
 
   return (
     <section id="contact" className="section bg-gradient-to-b from-sand to-sand-light dark:from-[#07111E] dark:to-[#0A1A2E] py-20 md:py-32">
@@ -153,7 +176,7 @@ export default function ContactForm() {
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="Your name"
-                  className={inputClass}
+                  className="w-full px-4 py-3 bg-white/80 dark:bg-[#0D1F30] border border-amber-100 dark:border-amber-800/40 rounded-lg text-slate-900 dark:text-[#F2EAD6] placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400 dark:focus:ring-amber-600 focus:bg-white dark:focus:bg-[#112233] transition-all"
                 />
               </div>
 
@@ -165,7 +188,7 @@ export default function ContactForm() {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="your@email.com"
-                  className={inputClass}
+                  className="w-full px-4 py-3 bg-white/80 dark:bg-[#0D1F30] border border-amber-100 dark:border-amber-800/40 rounded-lg text-slate-900 dark:text-[#F2EAD6] placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400 dark:focus:ring-amber-600 focus:bg-white dark:focus:bg-[#112233] transition-all"
                 />
               </div>
 
@@ -177,29 +200,31 @@ export default function ContactForm() {
                   value={formData.phone}
                   onChange={handleChange}
                   placeholder="+1 (555) 000-0000"
-                  className={inputClass}
+                  className="w-full px-4 py-3 bg-white/80 dark:bg-[#0D1F30] border border-amber-100 dark:border-amber-800/40 rounded-lg text-slate-900 dark:text-[#F2EAD6] placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400 dark:focus:ring-amber-600 focus:bg-white dark:focus:bg-[#112233] transition-all"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className={labelClass}>Check-in</label>
-                  <input
-                    type="date"
-                    name="checkIn"
-                    value={formData.checkIn}
-                    onChange={handleChange}
-                    className={inputClass}
+                  <DatePicker
+                    date={formData.checkIn}
+                    onDateChange={handleCheckInChange}
+                    placeholder="Check-in"
+                    disabledDates={checkInDisabled}
+                    fromDate={new Date()}
+                    triggerClassName="px-3 md:px-4 py-2 md:py-3 bg-white/80 dark:bg-[#0D1F30] border border-amber-100 dark:border-amber-800/40 rounded-lg text-slate-900 dark:text-[#F2EAD6] placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400 dark:focus:ring-amber-600 focus:bg-white dark:focus:bg-[#112233]"
                   />
                 </div>
                 <div>
                   <label className={labelClass}>Check-out</label>
-                  <input
-                    type="date"
-                    name="checkOut"
-                    value={formData.checkOut}
-                    onChange={handleChange}
-                    className={inputClass}
+                  <DatePicker
+                    date={formData.checkOut}
+                    onDateChange={handleCheckOutChange}
+                    placeholder="Check-out"
+                    disabledDates={checkOutDisabled}
+                    fromDate={formData.checkIn ? addDays(formData.checkIn, 1) : addDays(new Date(), 1)}
+                    triggerClassName="px-3 md:px-4 py-2 md:py-3 bg-white/80 dark:bg-[#0D1F30] border border-amber-100 dark:border-amber-800/40 rounded-lg text-slate-900 dark:text-[#F2EAD6] placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400 dark:focus:ring-amber-600 focus:bg-white dark:focus:bg-[#112233]"
                   />
                 </div>
               </div>
@@ -212,7 +237,7 @@ export default function ContactForm() {
                   onChange={handleChange}
                   placeholder="Tell us about your preferences..."
                   rows={4}
-                  className={`${inputClass} resize-none`}
+                  className="w-full px-4 py-3 bg-white/80 dark:bg-[#0D1F30] border border-amber-100 dark:border-amber-800/40 rounded-lg text-slate-900 dark:text-[#F2EAD6] placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400 dark:focus:ring-amber-600 focus:bg-white dark:focus:bg-[#112233] transition-all resize-none"
                 />
               </div>
 
@@ -234,3 +259,4 @@ export default function ContactForm() {
     </section>
   );
 }
+

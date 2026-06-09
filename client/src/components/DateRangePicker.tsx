@@ -85,7 +85,7 @@ export default function DateRangePicker({
               checkInOpen
                 ? "border-amber-400/70 bg-white/30 shadow-lg shadow-amber-400/10"
                 : "border-white/30 bg-white/20 hover:bg-white/25 hover:border-white/50",
-              "backdrop-blur-md group"
+              "backdrop-blur-md group text-white"
             )}
           >
             <div className="w-9 h-9 rounded-lg bg-amber-500/20 flex items-center justify-center shrink-0 group-hover:bg-amber-500/30 transition-colors">
@@ -105,12 +105,12 @@ export default function DateRangePicker({
           </button>
         </PopoverTrigger>
         <PopoverContent
-          className="w-auto p-0 bg-[#1a1a2e]/95 backdrop-blur-2xl border border-white/15 shadow-2xl rounded-2xl overflow-hidden"
+          className="w-auto p-0 bg-white dark:bg-[#0D1F30] border border-slate-200 dark:border-amber-800/20 shadow-2xl rounded-2xl overflow-hidden"
           align="center"
           sideOffset={8}
         >
-          <div className="p-3 border-b border-white/10">
-            <p className="text-xs font-semibold uppercase tracking-wider text-amber-400/80 text-center">
+          <div className="p-3 border-b border-border/40">
+            <p className="text-xs font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-400 text-center">
               Select check-in date
             </p>
           </div>
@@ -121,21 +121,13 @@ export default function DateRangePicker({
             disabled={checkInDisabled}
             fromDate={new Date()}
             initialFocus
-            classNames={{
-              root: "border-0",
-              month_caption: "text-white font-medium",
-              nav: "gap-1",
-              button_previous: "text-white/70 hover:text-white hover:bg-white/10 rounded-lg",
-              button_next: "text-white/70 hover:text-white hover:bg-white/10 rounded-lg",
-              caption_label: "text-white font-medium",
-              weekday: "text-white/50 text-[11px] uppercase tracking-wider font-semibold",
-              day: "text-white/80 hover:bg-white/10 rounded-lg data-[selected=true]:bg-amber-500/30 data-[selected=true]:text-white data-[range-start=true]:bg-amber-500/40 data-[range-end=true]:bg-amber-500/40 data-[range-middle=true]:bg-amber-500/10 text-sm",
-              today: "bg-white/5 font-bold text-amber-400",
-              disabled: "text-white/20 hover:bg-transparent cursor-not-allowed",
-              outside: "text-white/20",
-              range_start: "bg-amber-500/40 rounded-l-lg",
-              range_middle: "bg-amber-500/10 rounded-none",
-              range_end: "bg-amber-500/40 rounded-r-lg",
+            modifiers={{
+              range_start: checkIn ? [checkIn] : [],
+              range_end: checkOut ? [checkOut] : [],
+              range_middle: (date) => {
+                if (!checkIn || !checkOut) return false;
+                return isAfter(date, checkIn) && isBefore(date, checkOut);
+              }
             }}
           />
         </PopoverContent>
@@ -162,7 +154,7 @@ export default function DateRangePicker({
                 : checkIn
                   ? "border-white/30 bg-white/20 hover:bg-white/25 hover:border-white/50"
                   : "border-white/10 bg-white/5 cursor-not-allowed",
-              "backdrop-blur-md group"
+              "backdrop-blur-md group text-white"
             )}
           >
             <div className="w-9 h-9 rounded-lg bg-amber-500/20 flex items-center justify-center shrink-0 group-hover:bg-amber-500/30 transition-colors">
@@ -182,12 +174,12 @@ export default function DateRangePicker({
           </button>
         </PopoverTrigger>
         <PopoverContent
-          className="w-auto p-0 bg-[#1a1a2e]/95 backdrop-blur-2xl border border-white/15 shadow-2xl rounded-2xl overflow-hidden"
+          className="w-auto p-0 bg-white dark:bg-[#0D1F30] border border-slate-200 dark:border-amber-800/20 shadow-2xl rounded-2xl overflow-hidden"
           align="center"
           sideOffset={8}
         >
-          <div className="p-3 border-b border-white/10">
-            <p className="text-xs font-semibold uppercase tracking-wider text-amber-400/80 text-center">
+          <div className="p-3 border-b border-border/40">
+            <p className="text-xs font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-400 text-center">
               Select check-out date
             </p>
           </div>
@@ -198,21 +190,13 @@ export default function DateRangePicker({
             disabled={checkOutDisabled}
             fromDate={checkIn ? addDays(checkIn, 1) : addDays(new Date(), 1)}
             initialFocus
-            classNames={{
-              root: "border-0",
-              month_caption: "text-white font-medium",
-              nav: "gap-1",
-              button_previous: "text-white/70 hover:text-white hover:bg-white/10 rounded-lg",
-              button_next: "text-white/70 hover:text-white hover:bg-white/10 rounded-lg",
-              caption_label: "text-white font-medium",
-              weekday: "text-white/50 text-[11px] uppercase tracking-wider font-semibold",
-              day: "text-white/80 hover:bg-white/10 rounded-lg data-[selected=true]:bg-amber-500/30 data-[selected=true]:text-white data-[range-start=true]:bg-amber-500/40 data-[range-end=true]:bg-amber-500/40 data-[range-middle=true]:bg-amber-500/10 text-sm",
-              today: "bg-white/5 font-bold text-amber-400",
-              disabled: "text-white/20 hover:bg-transparent cursor-not-allowed",
-              outside: "text-white/20",
-              range_start: "bg-amber-500/40 rounded-l-lg",
-              range_middle: "bg-amber-500/10 rounded-none",
-              range_end: "bg-amber-500/40 rounded-r-lg",
+            modifiers={{
+              range_start: checkIn ? [checkIn] : [],
+              range_end: checkOut ? [checkOut] : [],
+              range_middle: (date) => {
+                if (!checkIn || !checkOut) return false;
+                return isAfter(date, checkIn) && isBefore(date, checkOut);
+              }
             }}
           />
         </PopoverContent>
